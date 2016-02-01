@@ -1,3 +1,9 @@
+# mnist stuff
+mnist_cnn/checkpoint
+mnist_cnn/data-1999
+mnist_cnn/data-999
+mnist_cnn/data/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
