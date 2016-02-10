@@ -4,7 +4,7 @@ Data is downloaded, extracted and prepared automatically. This will take several
 
 Usage: 
 
-1) python train.py --name=NAME 
-2) python eval.py --name=NAME
+1. python train.py --name=NAME 
+2. python eval.py --name=NAME
 
 
