@@ -7,6 +7,8 @@ mnist_cnn/data-999
 */data/
 */MODELS/
 
+med_data/Segmentation_Rigid_Training.zip
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
