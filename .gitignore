@@ -2,7 +2,10 @@
 mnist_cnn/checkpoint
 mnist_cnn/data-1999
 mnist_cnn/data-999
-mnist_cnn/data/
+
+# Data and Models
+*/data/
+*/MODELS/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
