@@ -37,7 +37,8 @@ def _activation_summary(x):
   """
   # Remove 'tower_[0-9]/' from the name in case this is a multi-GPU training
   # session. This helps the clarity of presentation on tensorboard.
-  tensor_name = re.sub('%s_[0-9]*/' % TOWER_NAME, '', x.op.name)
+  tensor_name = x.op.name
+  # tensor_name = re.sub('%s_[0-9]*/' % TOWER_NAME, '', x.op.name)
   tf.histogram_summary(tensor_name + '/activations', x)
   tf.scalar_summary(tensor_name + '/sparsity', tf.nn.zero_fraction(x))
 
@@ -78,13 +79,18 @@ def inference(images, keep_prob, train=True, num_filter_1=32, num_filter_2=64):
   # Second Pooling Layer
   h_pool2 = max_pool_2x2(h_conv2, name='pool2')
 
+  # Find correct dimension
+  dim = 1
+  for d in h_pool2.get_shape()[1:].as_list():
+    dim *= d
+
 
   # Adding Fully Connected Layers
   with tf.name_scope('fc1'):
-    W_fc1 = weight_variable('weights', [7 * 7 * num_filter_2, 1024])
+    W_fc1 = weight_variable('weights', [dim, 1024])
     b_fc1 = bias_variable('biases',[1024])
     
-    h_pool2_flat = tf.reshape(h_pool2, [-1, 7*7*num_filter_2])
+    h_pool2_flat = tf.reshape(h_pool2, [-1, dim])
     h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
     _activation_summary(h_fc1)
 
@@ -92,8 +98,8 @@ def inference(images, keep_prob, train=True, num_filter_1=32, num_filter_2=64):
   h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob, name='dropout')
 
   with tf.name_scope('logits'):
-    W_fc2 = weight_variable('weights', [1024, 10])
-    b_fc2 = bias_variable('biases', [10])
+    W_fc2 = weight_variable('weights', [1024, NUM_CLASSES])
+    b_fc2 = bias_variable('biases', [NUM_CLASSES])
     logits = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
     _activation_summary(logits)
 
@@ -127,7 +133,7 @@ def loss(logits, labels):
     loss = tf.reduce_mean(cross_entropy, name='xentropy_mean')
   return loss
 
-def training(loss, learning_rate):
+def training(loss, global_step=0, learning_rate=None):
   """Sets up the training Ops.
 
   Creates a summarizer to track the loss over time in TensorBoard.
@@ -139,6 +145,8 @@ def training(loss, learning_rate):
 
   Args:
     loss: Loss tensor, from loss().
+    global_step: Integer Variable counting the number of training steps
+      processed.
     learning_rate: The learning rate to use for gradient descent.
 
   Returns:
@@ -176,13 +184,4 @@ def evaluation(logits, labels):
   with tf.name_scope('eval'):
     correct = tf.nn.in_top_k(logits, labels, 1)
     # Return the number of true entries.
-    return tf.reduce_sum(tf.cast(correct, tf.int32))                        
-
-
-
-
-
-
-
-
-
+    return tf.reduce_sum(tf.cast(correct, tf.int32))

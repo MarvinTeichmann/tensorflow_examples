@@ -155,7 +155,7 @@ def inference(images, keep_prob, train=True,
     fullc1 = tf.nn.relu_layer(reshape, weights, biases, name=scope.name)
     _activation_summary(fullc1)
 
-  # local4
+  # Fully Connected 2
   with tf.variable_scope('FullC2') as scope:
     weights = _variable_with_weight_decay('weights', shape=[384, 192],
                                           stddev=0.04, wd=0.004)
