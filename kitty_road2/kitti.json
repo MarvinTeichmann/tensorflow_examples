@@ -6,9 +6,8 @@
   },
 
   "data": {
-    "train_file" : "/home/marvin/workarea/tensorflow_examples/kitty_road2/data/data_road/train.txt",
-    "val_file" : "/home/marvin/workarea/tensorflow_examples/kitty_road2/data/data_road/val.txt",
-    "data_url" : "http://kitti.is.tue.mpg.de/kitti/data_road.zip",
+    "train_file" : "data/data_road/train2.txt",
+    "val_file" : "data/data_road/val2.txt",
     "num_examples_per_epoch_for_train" : 100000,
     "num_examples_per_epoch_for_eval" : 65400,
     "road_color" : [255,0,255]
